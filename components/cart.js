@@ -34,5 +34,9 @@ export function cartSection() {
   const closeCartBtn = document.querySelector(".close-cart");
   const clearCartBtn = document.querySelector(".clear-cart");
 
+  let cart_col = [];
+
   return cart;
 }
+
+class Local_Storage {}
