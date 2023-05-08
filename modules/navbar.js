@@ -1,3 +1,5 @@
+import { setCartValue } from "./cart";
+
 export function createNavbar() {
   const navbar = document.createElement("nav");
   navbar.innerHTML = `
@@ -10,7 +12,7 @@ export function createNavbar() {
       <span class="nav-icon">
         <i class="fas fa-cart-plus"></i>
       </span>
-      <div class="cart-items">0</div>
+      <span class="cart-items"></span>
     </div>
   </div>
   `;
