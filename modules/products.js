@@ -54,7 +54,4 @@ export class UI_Products {
     });
     document.querySelector(".products-center").innerHTML = result;
   }
-
-  //setup all the buttons
-  setupApp() {}
 }

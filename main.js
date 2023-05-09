@@ -4,6 +4,7 @@ import { heroSection } from "./modules/hero";
 import { productSection, Products, UI_Products } from "./modules/products";
 import {
   cartSection,
+  closeCart,
   setCartItems,
   setCartValue,
   showCart,
@@ -31,7 +32,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const product = new Products();
 
   //setup App
-  ui.setupApp();
+  setupApp();
+  cartLogic();
 
   //get all products
   product
@@ -70,3 +72,43 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     });
 });
+
+//setup all the buttons and data on load
+function setupApp() {
+  cartCol = Storage.getCart();
+  setCartValue(cartCol);
+  populateCart(cartCol);
+
+  const cartBtn = document.querySelector(".cart-btn");
+  cartBtn.addEventListener("click", () => {
+    showCart();
+  });
+
+  const closeBtn = document.querySelector(".close-cart");
+  closeBtn.addEventListener("click", () => {
+    closeCart();
+  });
+}
+
+function populateCart(cart) {
+  cart.forEach((item) => setCartItems(item));
+}
+
+//cart items interferences
+function cartLogic() {
+  const clearCartBtn = document.querySelector(".clear-cart");
+  clearCartBtn.addEventListener("click", () => {
+    clearCart();
+    console.log("BUTTON clicked");
+  });
+}
+
+function clearCart() {
+  let cartItems = cartCol.map((items) => items.id);
+  cartItems.forEach((id) => removeItem(id));
+}
+
+function removeItem(id) {
+  cartCol = cartCol.filter((items) => items.id !== id);
+  setCartValue(cartCol);
+}

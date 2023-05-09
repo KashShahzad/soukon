@@ -18,10 +18,6 @@ export function cartSection() {
   `;
   cart.classList.add("cart-overlay");
 
-  const cartBtn = document.querySelector(".cart-btn");
-  const closeCartBtn = document.querySelector(".close-cart");
-  const clearCartBtn = document.querySelector(".clear-cart");
-
   return { cart, cartCol };
 }
 
@@ -72,6 +68,15 @@ export function showCart() {
   cartDOM.classList.add("showCart");
 }
 
+//close cart
+export function closeCart() {
+  const cartDOM = document.querySelector(".cart");
+  const cartOverlay = document.querySelector(".cart-overlay");
+
+  cartOverlay.classList.remove("transparentBcg");
+  cartDOM.classList.remove("showCart");
+}
+
 //to store the cart in local storage
 export class Storage {
   //create a static method here because it does not need class to be initiated to be used
@@ -86,5 +91,12 @@ export class Storage {
   //save cart products in storage
   static saveCart(cart) {
     localStorage.setItem("cart", JSON.stringify(cart));
+  }
+
+  //get a cart from local storage
+  static getCart() {
+    return localStorage.getItem("cart")
+      ? JSON.parse(localStorage.getItem("cart"))
+      : [];
   }
 }
