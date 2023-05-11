@@ -33,7 +33,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   //setup App
   setupApp();
-  cartLogic();
 
   //get all products
   product
@@ -77,6 +76,7 @@ document.addEventListener("DOMContentLoaded", function () {
 function setupApp() {
   cartCol = Storage.getCart();
   setCartValue(cartCol);
+  cartLogic();
   populateCart(cartCol);
 
   const cartBtn = document.querySelector(".cart-btn");
@@ -99,16 +99,57 @@ function cartLogic() {
   const clearCartBtn = document.querySelector(".clear-cart");
   clearCartBtn.addEventListener("click", () => {
     clearCart();
-    console.log("BUTTON clicked");
+  });
+  const cartContent = document.querySelector(".cart-content");
+  cartContent.addEventListener("click", (event) => {
+    if (event.target.classList.contains("remove-item")) {
+      cartContent.removeChild(event.target.parentElement.parentElement);
+      removeItem(event.target.dataset.id);
+    } else if (event.target.classList.contains("fa-chevron-up")) {
+      let tempItem = cartCol.find(
+        (item) => item.id === event.target.dataset.id
+      );
+      tempItem.amount = tempItem.amount + 1;
+      Storage.saveCart(cartCol);
+      setCartValue(cartCol);
+      event.target.nextElementSibling.innerText = tempItem.amount;
+    } else if (event.target.classList.contains("fa-chevron-down")) {
+      let tempItem = cartCol.find(
+        (item) => item.id === event.target.dataset.id
+      );
+      tempItem.amount = tempItem.amount - 1;
+      if (tempItem.amount > 0) {
+        Storage.saveCart(cartCol);
+        setCartValue(cartCol);
+        event.target.previousElementSibling.innerText = tempItem.amount;
+      } else {
+        cartContent.removeChild(event.target.parentElement.parentElement);
+        removeItem(event.target.dataset.id);
+      }
+    }
   });
 }
 
 function clearCart() {
   let cartItems = cartCol.map((items) => items.id);
   cartItems.forEach((id) => removeItem(id));
+  const cartContent = document.querySelector(".cart-content");
+
+  while (cartContent.children.length > 0) {
+    cartContent.removeChild(cartContent.children[0]);
+  }
+  closeCart();
 }
 
 function removeItem(id) {
   cartCol = cartCol.filter((items) => items.id !== id);
   setCartValue(cartCol);
+  Storage.saveCart(cartCol);
+  let button = getSingleButton(id);
+  button.disabled = false;
+  button.innerHTML = `<i class="fas fa-shopping-cart"></i>add to cart`;
+}
+
+function getSingleButton(id) {
+  return buttonsDOM.find((button) => button.dataset.id === id);
 }
